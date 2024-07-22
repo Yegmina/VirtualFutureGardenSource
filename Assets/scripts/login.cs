@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 using PlayFab;
 using PlayFab.ClientModels;
 
-public class testjs : MonoBehaviour {
+public class login : MonoBehaviour {
     [DllImport("__Internal")]
     private static extern System.IntPtr GetUserName();
 
