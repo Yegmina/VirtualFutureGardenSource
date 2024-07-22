@@ -10,6 +10,10 @@ public class OxygenCalculator : MonoBehaviour
     public static OxygenCalculator Instance;
 
     public Text displayOxygen;
+    public Text displayCurrentLightValue;
+    public Text displayNextLevelCost;
+    public Text displayNextLevelValue;
+
     private float currentOxygen = 0f;
     private float lightValue = 0f;
     private float artificialLightValue = 50f;  // Значение по умолчанию
@@ -20,6 +24,9 @@ public class OxygenCalculator : MonoBehaviour
 
     private DateTime lastLogoutTime;
     private double maxOfflineHours = 1; // Значение по умолчанию
+
+    private List<int> lightValues = new List<int> { 50, 75, 100, 125 }; // Значения lux для каждого уровня
+    private List<int> oxygenCosts = new List<int> { 0, 1000, 2000, 5000 }; // Стоимость кислорода для улучшения
 
     void Awake()
     {
@@ -40,7 +47,9 @@ public class OxygenCalculator : MonoBehaviour
 
         // Начинаем таймер обновления кислорода
         InvokeRepeating("CalculateOxygen", 1.0f, 1.0f);
-		
+
+        // Обновляем отображение уровней и стоимости
+        UpdateLightValueDisplay();
     }
 
     public void UpdateLightValue(float newLightValue)
@@ -114,6 +123,9 @@ public class OxygenCalculator : MonoBehaviour
         UpdateOxygenForOfflineTime();
         isPlayerStatisticsLoaded = true;
         retryCount = 0;
+
+        // Обновляем отображение уровней и стоимости
+        UpdateLightValueDisplay();
     }
 
     void OnGetStatisticsFailure(PlayFabError error)
@@ -148,9 +160,9 @@ public class OxygenCalculator : MonoBehaviour
         {
             displayOxygen.text = "Oxygen: " + currentOxygen.ToString("F2") + " [units]";
         }
-		if (currentOxygen<0) {currentOxygen=1;}
+
+        if (currentOxygen < 0) { currentOxygen = 1; }
         Debug.Log("Oxygen value updated for offline time: " + currentOxygen);
-		
     }
 
     void UpdateOxygenStatistic(float oxygenValue, float artificialLightValue)
@@ -213,6 +225,84 @@ public class OxygenCalculator : MonoBehaviour
             retryCount++;
             Debug.LogWarning("Retrying to update player statistics in 1 second...");
             Invoke(nameof(RetryUpdateOxygenStatistic), 1.0f);
+        }
+    }
+
+    // Функция для улучшения значения artificialLightValue
+    public void UpgradeArtificialLightValue()
+    {
+        if (!isPlayerStatisticsLoaded)
+        {
+            Debug.LogWarning("Player statistics not loaded yet. Cannot upgrade artificial light value.");
+            return;
+        }
+
+        int currentLevel = lightValues.IndexOf((int)artificialLightValue);
+
+        if (currentLevel == -1 || currentLevel >= lightValues.Count - 1)
+        {
+            Debug.LogWarning("Cannot upgrade artificial light value. Either at max level or invalid current value.");
+            return;
+        }
+
+        int nextLevel = currentLevel + 1;
+        int costForNextLevel = oxygenCosts[nextLevel];
+
+        if (currentOxygen < costForNextLevel)
+        {
+            Debug.LogWarning("Not enough oxygen to upgrade artificial light value.");
+            return;
+        }
+
+        currentOxygen -= costForNextLevel;
+        artificialLightValue = lightValues[nextLevel];
+
+        if (displayOxygen != null)
+        {
+            displayOxygen.text = "Oxygen: " + currentOxygen.ToString("F2") + " [units]";
+        }
+
+        Debug.Log("Artificial Light value upgraded to: " + artificialLightValue);
+
+        // Обновление значения кислорода и искусственного света в PlayFab
+        UpdateOxygenStatistic(currentOxygen, artificialLightValue);
+
+        // Обновляем отображение уровней и стоимости
+        UpdateLightValueDisplay();
+    }
+
+    // Обновление отображения уровней и стоимости
+    void UpdateLightValueDisplay()
+    {
+        int currentLevel = lightValues.IndexOf((int)artificialLightValue);
+        int nextLevel = currentLevel + 1;
+
+        if (displayCurrentLightValue != null)
+        {
+            displayCurrentLightValue.text = "Current Light Value: " + artificialLightValue + " lux";
+        }
+
+        if (nextLevel < lightValues.Count)
+        {
+            if (displayNextLevelCost != null)
+            {
+                displayNextLevelCost.text = "Next Level Cost: " + oxygenCosts[nextLevel] + " oxygen";
+            }
+            if (displayNextLevelValue != null)
+            {
+                displayNextLevelValue.text = "Next Level Value: " + lightValues[nextLevel] + " lux";
+            }
+        }
+        else
+        {
+            if (displayNextLevelCost != null)
+            {
+                displayNextLevelCost.text = "Next Level Cost: MAX";
+            }
+            if (displayNextLevelValue != null)
+            {
+                displayNextLevelValue.text = "Next Level Value: MAX";
+            }
         }
     }
 }
