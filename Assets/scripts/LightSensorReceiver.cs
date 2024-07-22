@@ -8,8 +8,7 @@ public class LightSensorReceiver : MonoBehaviour
     private static extern void StartLightSensor();
 
     public Text displayLight;
-	public Light sceneLight;  // Ссылка на компонент Light в сцене
-
+    public Light sceneLight;  // Ссылка на компонент Light в сцене
 
     void Start() 
     {
@@ -27,7 +26,8 @@ public class LightSensorReceiver : MonoBehaviour
         
         // Notify the OxygenCalculator about the new light value
         OxygenCalculator.Instance.UpdateLightValue(float.Parse(lightValue));
-		        // Update the light intensity based on the lux value
+        
+        // Update the light intensity based on the lux value
         if (sceneLight != null)
         {
             // Можно выбрать масштабирование значения lux для интенсивности света

@@ -11,6 +11,7 @@ mergeInto(LibraryManager.library, {
                     if (lightValue === 0) {
                         console.warn('Received light value is 0, which is unexpected.');
                     }
+                    console.log('Sending message to Unity:', lightValue.toString());
                     SendMessage('LightSensorObject', 'OnLightSensorChanged', lightValue.toString());
                 });
 
