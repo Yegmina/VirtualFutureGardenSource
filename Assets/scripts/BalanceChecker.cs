@@ -11,6 +11,7 @@ public class BalanceChecker : MonoBehaviour
     public OxygenCalculator oxygenCalculator; // Ссылка на скрипт OxygenCalculator
     public string statisticName = "HOTBalance"; // Имя статистики в PlayFab
     public float boost = 1f; // Значение boost, устанавливаемое через Inspector или другой метод
+	public TutorialManager tutorialManager; // Drag and drop your TutorialManager script here in the inspector
 
     // Публичная функция для проверки баланса и изменения boost
     public void CheckBalanceAndSetBoost(int N)
@@ -45,6 +46,10 @@ public class BalanceChecker : MonoBehaviour
             oxygenCalculator.boost = boost;
             object0.SetActive(false);
             object1.SetActive(true);
+			
+			            // Если достигнут этап туториала, включить подсказку
+            tutorialManager.SetTutorialStageReached(true);
+
         }
     }
 
