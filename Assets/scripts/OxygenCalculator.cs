@@ -17,6 +17,7 @@ public class OxygenCalculator : MonoBehaviour
     private float currentOxygen = 0f;
     private float lightValue = 0f;
     private float artificialLightValue = 50f;  // Значение по умолчанию
+    public float boost = 1f;  // Значение по умолчанию
 
     private bool isPlayerStatisticsLoaded = false;
     private int retryCount = 0;
@@ -59,14 +60,14 @@ public class OxygenCalculator : MonoBehaviour
 
     void CalculateOxygen()
     {
-        currentOxygen += (1f / 60f) * (lightValue + artificialLightValue);
+        currentOxygen += boost * (1f / 600f) * (lightValue + artificialLightValue);
 
         if (displayOxygen != null)
         {
             displayOxygen.text = "Oxygen: " + currentOxygen.ToString("F2") + " [units]";
         }
 
-        Debug.Log("Oxygen value updated: " + currentOxygen);
+       // Debug.Log("Oxygen value updated: " + currentOxygen);
 
         // Обновление значения кислорода в PlayFab
         UpdateOxygenStatistic(currentOxygen, artificialLightValue);

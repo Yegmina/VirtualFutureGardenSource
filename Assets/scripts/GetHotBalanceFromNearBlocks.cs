@@ -1,9 +1,12 @@
 using System.Collections;
+using System.Collections.Generic;
 using System.Text;
 using UnityEngine.UI;
 using UnityEngine;
 using UnityEngine.Networking;
-using Newtonsoft.Json.Linq; // может потом поменяю, но пока работает. А главное правило: работает - не трогай
+using Newtonsoft.Json.Linq;
+using PlayFab;
+using PlayFab.ClientModels;
 
 public class GetHotBalanceFromNearBlocks : MonoBehaviour
 {
@@ -13,7 +16,8 @@ public class GetHotBalanceFromNearBlocks : MonoBehaviour
     private string rpcUrl = "https://rpc.mainnet.near.org"; // NEAR mainnet RPC endpoint
     private string contractAddress = "game.hot.tg"; // Contract address of the HOT token
     private int decimals = 6; // Decimals for the HOT token
-
+//I am not using hot sdk hear. But I use near blockchain and check how many hot tokens have user address
+//address is the username sent after login in the hot wallet. It is also tested with the sha256 cipher. This gives us confidence that the user is not a fraudster
     void Start()
     {
         StartCoroutine(DelayedFetchBalance());
@@ -21,7 +25,7 @@ public class GetHotBalanceFromNearBlocks : MonoBehaviour
 
     IEnumerator DelayedFetchBalance()
     {
-        // ожидание 3 сек на всяк случай
+        
         yield return new WaitForSeconds(3.0f);
 
         string walletAddress = userNameText.text;
@@ -31,13 +35,13 @@ public class GetHotBalanceFromNearBlocks : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("Wallet address is empty or null"); 
+            Debug.LogWarning("Wallet address is empty or null");
         }
     }
 
     IEnumerator FetchBalance(string walletAddress)
     {
-        string method = "ft_balance_of"; //кол контракт
+        string method = "ft_balance_of"; 
         string argsJson = "{\"account_id\":\"" + walletAddress + "\"}";
         string argsBase64 = ToBase64(argsJson);
         
@@ -49,7 +53,7 @@ public class GetHotBalanceFromNearBlocks : MonoBehaviour
         request.downloadHandler = new DownloadHandlerBuffer();
         request.SetRequestHeader("Content-Type", "application/json");
 
-        // для дебага
+        // Log the request data for debugging
         Debug.Log($"Request Data: {requestData}");
 
         yield return request.SendWebRequest();
@@ -65,6 +69,7 @@ public class GetHotBalanceFromNearBlocks : MonoBehaviour
             Debug.Log($"Response: {responseText}");
             string balance = ExtractBalanceFromJson(responseText);
             balanceText.text = $"{balance} HOT";
+            SaveBalanceToPlayFab(balance);
         }
     }
 
@@ -88,6 +93,33 @@ public class GetHotBalanceFromNearBlocks : MonoBehaviour
         {
             Debug.LogError($"Error parsing JSON response: {ex.Message}");
             return "0";
+        }
+    }
+
+    void SaveBalanceToPlayFab(string balance)
+    {
+        try
+        {
+            double balanceValue = double.Parse(balance);
+            var request = new UpdatePlayerStatisticsRequest
+            {
+                Statistics = new List<StatisticUpdate>
+                {
+                    new StatisticUpdate
+                    {
+                        StatisticName = "HOTBalance",
+                        Value = (int)balanceValue // Convert double to int
+                    }
+                }
+            };
+
+            PlayFabClientAPI.UpdatePlayerStatistics(request, 
+                result => Debug.Log("Successfully updated player statistics"), 
+                error => Debug.LogError($"Error updating player statistics: {error.GenerateErrorReport()}"));
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogError($"Error saving balance to PlayFab: {ex.Message}");
         }
     }
 }
