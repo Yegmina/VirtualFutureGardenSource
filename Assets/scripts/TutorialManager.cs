@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
 public class TutorialManager : MonoBehaviour
 {
@@ -29,17 +30,22 @@ public class TutorialManager : MonoBehaviour
 
     private void OnTutorialButtonClick()
     {
-        DisableTutorial();
+        StartCoroutine(DisableTutorialWithDelay());
     }
 
     // Публичная функция для отключения туториала и сохранения состояния
     public void DisableTutorial()
     {
-        // Скрываем туториал и сохраняем состояние, чтобы не показывать его снова
         tutorialHint.SetActive(false);
         PlayerPrefs.SetInt(tutorialId, 1);
         PlayerPrefs.Save();
         Debug.Log("Tutorial disabled and state saved.");
+    }
+
+    private IEnumerator DisableTutorialWithDelay()
+    {
+        yield return new WaitForSeconds(0.3f);
+        DisableTutorial();
     }
 
     // Публичная функция для изменения переменной isTutorialStageReached
