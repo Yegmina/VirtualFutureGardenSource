@@ -16,18 +16,18 @@ public class OxygenCalculator : MonoBehaviour
 
     private float currentOxygen = 0f;
     private float lightValue = 0f;
-    private float artificialLightValue = 50f;  // Значение по умолчанию
-    public float boost = 1f;  // Значение по умолчанию
+    private float artificialLightValue = 50f;  // Default value
+    public float boost = 1f;  // Default value
 
     private bool isPlayerStatisticsLoaded = false;
     private int retryCount = 0;
     private const int maxRetryCount = 5;
 
     private DateTime lastLogoutTime;
-    private double maxOfflineHours = 1; // Значение по умолчанию
+    private double maxOfflineHours = 1; // Default value
 
-    private List<int> lightValues = new List<int> { 50, 75, 100, 125 }; // Значения lux для каждого уровня
-    private List<int> oxygenCosts = new List<int> { 0, 1000, 2000, 5000 }; // Стоимость кислорода для улучшения
+    private List<int> lightValues = new List<int> { 50, 75, 100, 125 }; // Lux values for each level
+    private List<int> oxygenCosts = new List<int> { 0, 1000, 2000, 5000 }; // Oxygen cost for upgrades
 
     void Awake()
     {
@@ -43,13 +43,13 @@ public class OxygenCalculator : MonoBehaviour
 
     void Start()
     {
-        // Загружаем статистику игрока
+        // Load player statistics
         LoadPlayerStatistics();
 
-        // Начинаем таймер обновления кислорода
+        // Start oxygen update timer
         InvokeRepeating("CalculateOxygen", 1.0f, 1.0f);
 
-        // Обновляем отображение уровней и стоимости
+        // Update level and cost display
         UpdateLightValueDisplay();
     }
 
@@ -69,7 +69,7 @@ public class OxygenCalculator : MonoBehaviour
 
        // Debug.Log("Oxygen value updated: " + currentOxygen);
 
-        // Обновление значения кислорода в PlayFab
+        // Update oxygen value in PlayFab
         UpdateOxygenStatistic(currentOxygen, artificialLightValue);
     }
 
@@ -125,7 +125,7 @@ public class OxygenCalculator : MonoBehaviour
         isPlayerStatisticsLoaded = true;
         retryCount = 0;
 
-        // Обновляем отображение уровней и стоимости
+        // Update level and cost display
         UpdateLightValueDisplay();
     }
 
@@ -229,7 +229,7 @@ public class OxygenCalculator : MonoBehaviour
         }
     }
 
-    // Функция для улучшения значения artificialLightValue
+    // Method to upgrade artificialLightValue
     public void UpgradeArtificialLightValue()
     {
         if (!isPlayerStatisticsLoaded)
@@ -265,14 +265,14 @@ public class OxygenCalculator : MonoBehaviour
 
         Debug.Log("Artificial Light value upgraded to: " + artificialLightValue);
 
-        // Обновление значения кислорода и искусственного света в PlayFab
+        // Update oxygen and artificial light values in PlayFab
         UpdateOxygenStatistic(currentOxygen, artificialLightValue);
 
-        // Обновляем отображение уровней и стоимости
+        // Update level and cost display
         UpdateLightValueDisplay();
     }
 
-    // Обновление отображения уровней и стоимости
+    // Update level and cost display
     void UpdateLightValueDisplay()
     {
         int currentLevel = lightValues.IndexOf((int)artificialLightValue);
@@ -305,5 +305,22 @@ public class OxygenCalculator : MonoBehaviour
                 displayNextLevelValue.text = "Next Level Value: MAX";
             }
         }
+    }
+
+    // Public method to add oxygen
+    public void AddOxygen(float oxygenToAdd)
+    {
+        currentOxygen += oxygenToAdd;
+
+        // Update the oxygen display
+        if (displayOxygen != null)
+        {
+            displayOxygen.text = "Oxygen: " + currentOxygen.ToString("F2") + " [units]";
+        }
+
+        Debug.Log("Oxygen increased by: " + oxygenToAdd + ", new total: " + currentOxygen);
+
+        // Optionally, update the oxygen statistic in PlayFab
+        UpdateOxygenStatistic(currentOxygen, artificialLightValue);
     }
 }
