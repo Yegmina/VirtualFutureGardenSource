@@ -1,8 +1,30 @@
-All rights reserved by Yegmina organization, Yehor Tereshchenko.
-Please email tereyehor@gmail.com if you would like permission to do something with the contents of this repository
+License and Copyright Notice
+(English Version)
 
-Yegmina organization, Yehor Tereshchenko, все права защищены
-Пожалуйста, напишите на tereyehor@gmail.com если вам нужно разрешение что-то сделать с содержимым этого репозитория
+All rights reserved by Yegmina Organization and Yehor Tereshchenko.
+No part of this repository—including but not limited to source code, documentation, images, and other resources—may be reproduced, distributed, modified, or transmitted in any form or by any means without prior written permission from the copyright holders.
 
-Yegmina organization, Yehor Tereshchenko, усі права захищені
-Будь ласка, напишіть на tereyehor@gmail.com якщо вам потрібен дозвіл щось зробити з вмістом цього репозиторію
+Permission:
+To request permission for any use of the contents of this repository, please send an email to:
+tereyehor@gmail.com
+
+Third‑Party Assets:
+This repository incorporates certain Unity assets and other files which are subject to separate licensing agreements. We have obtained the necessary licenses to use these assets in our app. In github it is only for informational and demonstrational purposes. You are strictly prohibited from downloading, reproducing, or using any of these assets directly from this repository. All such assets must be obtained directly from their official sources in compliance with their respective license agreements and applicable intellectual property laws.
+
+Unauthorized use or reproduction of any materials contained herein may result in legal action under applicable laws governing copyright and intellectual property. We are not responsible if you infringe the rights of other authors included in this repository.
+
+Ліцензія та Повідомлення про Авторські Права
+(Українська версія)
+
+Усі права захищені організацією Yegmina та Єгором Терещенко.
+Жодна частина цього репозиторію, включаючи, але не обмежуючись вихідним кодом, документацією, зображеннями та іншими ресурсами, не може бути відтворена, поширена, змінена або передана будь-яким чином без попередньої письмової згоди правовласників.
+
+Дозвіл:
+Для отримання дозволу на використання вмісту цього репозиторію, будь ласка, звертайтеся за адресою:
+tereyehor@gmail.com
+
+Сторонні Активи:
+Цей репозиторій містить деякі Unity-активи та інші файли, що використовуються відповідно до окремих ліцензійних угод. Ми отримали необхідні ліцензії для використання цих активів. Репозуторій гітхабу слухує виключно з інформаційною та демонстраційною метою. Вам суворо заборонено завантажувати, відтворювати чи використовувати ці активи безпосередньо з цього репозиторію. Усі такі активи мають бути завантажені безпосередньо з їх офіційних джерел відповідно до умов відповідних ліцензій та чинного законодавства про інтелектуальну власність.
+
+Несанкціоноване використання або відтворення будь-яких матеріалів, що містяться в цьому репозиторії, може призвести до юридичних наслідків відповідно до чинного законодавства про авторські права та інтелектуальну власність. Ми не несемо відповідальності якщо ви порушуєте право інших авторів, включених в цій репозеторії.
+
